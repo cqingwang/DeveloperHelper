@@ -34,7 +34,7 @@ object Dump {
                 parent.mkdirs()
             }
             log("sdk version:" + Build.VERSION.SDK_INT)
-            if (DeviceUtils.isOreo || DeviceUtils.isPie) {
+            if (DeviceUtils.supportNativeHook()) {
                 OreoDump.init(lpparam, type)
             } else {
                 LowSdkDump.init(lpparam, type)
