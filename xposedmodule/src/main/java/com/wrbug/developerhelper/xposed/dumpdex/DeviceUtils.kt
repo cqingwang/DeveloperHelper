@@ -27,6 +27,6 @@ object DeviceUtils {
     }
 
     fun supportNativeHook(): Boolean {
-        return isNougat || isMarshmallow || isOreo || isPie
+        return sdkInit>23
     }
 }
