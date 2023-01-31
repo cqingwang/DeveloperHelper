@@ -1,10 +1,5 @@
 package com.wrbug.developerhelper.xposed
 
-import android.os.Process
-import com.jaredrummler.android.shell.Shell
-import com.wrbug.developerhelper.commonutil.ProcessUtil
-import com.wrbug.developerhelper.commonutil.ShellUtils
-import com.wrbug.developerhelper.commonutil.toJson
 import com.wrbug.developerhelper.ipc.processshare.manager.AppXposedProcessDataManager
 import com.wrbug.developerhelper.ipc.processshare.manager.GlobalConfigProcessDataManager
 import com.wrbug.developerhelper.xposed.developerhelper.DeveloperHelper

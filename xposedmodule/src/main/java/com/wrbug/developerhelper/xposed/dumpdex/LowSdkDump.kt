@@ -31,9 +31,9 @@ object LowSdkDump {
         if (DeviceUtils.supportNativeHook()) {
             Native.dump(lpparam.packageName)
         }
-        if (type == PackerInfo.Type.BAI_DU) {
-            return
-        }
+//        if (type == PackerInfo.Type.BAI_DU) {
+//            return
+//        }
         ApplicationHelper.hook(lpparam) {
             dump(lpparam.packageName, this.javaClass)
             attachBaseContextHook(lpparam, this.classLoader)
