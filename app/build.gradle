@@ -25,19 +25,29 @@ android {
         versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
-            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
+            abiFilters "armeabi-v7a", "arm64-v8a"
         }
     }
+    signingConfigs {
+        signing {
+            storeFile file("signature/debug.keystore")
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
+
     buildTypes {
         debug {
             versionNameSuffix "-debug"
-            if (signingConfigs.releaseConfig != null) {
-                signingConfig signingConfigs.releaseConfig
-            }
+            signingConfig signingConfigs.signing
         }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.signing
         }
     }
     dataBinding {
@@ -74,29 +84,11 @@ dependencies {
     implementation project(':xposedmodule')
     implementation project(':commonwidget')
     implementation 'de.blox:graphview:0.5.0'
+    
+    compileOnly 'com.github.pengrad:jdk9-deps:1.0'
 }
 kapt {
     generateStubs = true
 }
 
 
-
-Properties props = new Properties()
-def propFile = file('../signing.properties')
-if (propFile.canRead()) {
-    props.load(new FileInputStream(propFile))
-    if (props != null &&
-            props.containsKey('SIGN_FILE') && props.containsKey('SIGN_PASSWORD') &&
-            props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
-        android.signingConfigs.releaseConfig.storeFile = file(props['SIGN_FILE'])
-        android.signingConfigs.releaseConfig.storePassword = props['SIGN_PASSWORD']
-        android.signingConfigs.releaseConfig.keyAlias = props['KEY_ALIAS']
-        android.signingConfigs.releaseConfig.keyPassword = props['KEY_PASSWORD']
-    } else {
-        println 'release build not found signing properties'
-        android.buildTypes.release.signingConfig = null
-    }
-} else {
-    println 'release build not found signing file'
-    android.buildTypes.release.signingConfig = null
-}

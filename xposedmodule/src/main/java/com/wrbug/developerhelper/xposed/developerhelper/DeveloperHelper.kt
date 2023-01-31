@@ -64,7 +64,7 @@ object DeveloperHelper {
                         "设备已root,开始释放so文件".xposedLog()
                         doAsync {
                             initProcessDataDir()
-                            saveSo(activity, "armeabi", Native.SO_FILE)
+//                            saveSo(activity, "armeabi", Native.SO_FILE)
                             saveSo(activity, "armeabi-v7a", Native.SO_FILE_V7a)
                             saveSo(activity, "arm64-v8a", Native.SO_FILE_V8a)
                         }
