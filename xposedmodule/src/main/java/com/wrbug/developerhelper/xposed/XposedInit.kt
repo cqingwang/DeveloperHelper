@@ -15,13 +15,25 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  * @since 2018/3/20
  */
 class XposedInit : IXposedHookLoadPackage {
+
     var tag = "XposedInit"
     var configData: GlobalConfigProcessData? = null
+    var whitelist = arrayOf(
+        "com.google.android.apps.restore",
+        "com.android.providers.settings",
+        "com.android.server.telecom",
+        "com.android.networkstack.inprocess",
+        "com.qualcomm.location",
+        "android",
+        "com.dsi.ant.server"
+    )
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
-        log(tag, "handleLoadPackage${lpparam.packageName}")
+        log(tag, "handleLoadPackage-> ${lpparam.packageName}")
+        if (whitelist.contains(lpparam.packageName)) return
+
         if (lpparam.packageName == SELF_PACKAGE_NAME) {
-            log(tag, "call DeveloperHelper.init")
+            log(tag, "call DeveloperHelper init self")
             DeveloperHelper.init(lpparam)
             return
         }
@@ -42,7 +54,7 @@ class XposedInit : IXposedHookLoadPackage {
         const val SELF_PACKAGE_NAME = "com.wrbug.developerhelper"
 
         fun log(tag: String, msg: String) {
-            XposedBridge.log("developerhelper:$tag:$msg")
+            XposedBridge.log("$tag:$msg")
         }
     }
 }

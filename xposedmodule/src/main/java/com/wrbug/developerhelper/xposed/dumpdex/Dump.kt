@@ -18,6 +18,7 @@ object Dump {
 
     fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         val type = PackerInfo.find(lpparam) ?: return
+        XposedInit.log(tag, "sheller-> ${type.name}, ${lpparam.packageName},")
         val data = ProcessDataManager.get(DumpDexListProcessData::class.java)
         val packageNames = data.getData() ?: return
         val packageName = lpparam.packageName
@@ -34,7 +35,7 @@ object Dump {
                 parent.mkdirs()
             }
             XposedInit.log("Dump", "sdk version:" + Build.VERSION.SDK_INT)
-            targetpackage=lpparam.packageName
+            targetpackage = lpparam.packageName
             if (isNativeHook()) {
                 NativeDump.dump(targetpackage)
             } else {

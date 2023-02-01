@@ -65,7 +65,7 @@ object PackerInfo {
                 XposedInit.log(tag, "find class:$s")
                 val type = getType(s)
                 XposedInit.log(tag, "find packerType :" + type!!.name)
-                type.application = s
+                type.shellClassName = s
                 return type
             }
         }
@@ -85,7 +85,7 @@ object PackerInfo {
         TENCENT("腾讯加固"),
         BAI_DU("百度加固");
 
-        var application: String = ""
+        var shellClassName: String = ""
 
 
     }

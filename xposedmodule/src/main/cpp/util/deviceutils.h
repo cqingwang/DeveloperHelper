@@ -15,4 +15,4 @@ void **get_old_open_function_addr();
 
 void *get_new_open_function_addr();
 
-bool is_arm_64();
+bool isArm64();

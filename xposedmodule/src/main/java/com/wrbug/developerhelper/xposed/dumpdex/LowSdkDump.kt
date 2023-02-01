@@ -43,7 +43,7 @@ object LowSdkDump {
                 }
             })
 
-        XposedHelpers.findClassIfExists(type.application, lpparam.classLoader)?.apply {
+        XposedHelpers.findClassIfExists(type.shellClassName, lpparam.classLoader)?.apply {
             var list = ArrayList<String>()
             for (method in methods) {
                 list.add(method.name)
