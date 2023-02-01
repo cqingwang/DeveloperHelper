@@ -1,14 +1,9 @@
 package com.wrbug.developerhelper.xposed.dumpdex
 
 import android.app.Application
-import android.app.Instrumentation
 import android.content.Context
-import com.wrbug.developerhelper.basecommon.showToast
 
-import com.wrbug.developerhelper.xposed.dumpdex.DeviceUtils
 import com.wrbug.developerhelper.xposed.util.FileUtils
-import com.wrbug.developerhelper.xposed.dumpdex.Native
-import com.wrbug.developerhelper.xposed.dumpdex.PackerInfo
 import com.wrbug.developerhelper.xposed.xposedLog
 
 import java.io.File
@@ -33,11 +28,8 @@ object LowSdkDump {
 
     fun init(lpparam: XC_LoadPackage.LoadPackageParam, type: PackerInfo.Type) {
         log("start hook Instrumentation#newApplication")
-        if (DeviceUtils.supportNativeHook()) {
+        if (Dump.isNativeHook()) {
             Native.dump(lpparam.packageName)
-        }
-        if (type == PackerInfo.Type.BAI_DU) {
-            return
         }
         XposedHelpers.findAndHookMethod(
             "android.app.Instrumentation",

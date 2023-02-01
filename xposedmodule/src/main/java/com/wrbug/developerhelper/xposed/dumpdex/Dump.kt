@@ -10,6 +10,10 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.io.File
 
 object Dump {
+    fun isNativeHook(): Boolean {
+        return Build.VERSION.SDK_INT >23
+    }
+
     fun log(txt: String) {
         XposedBridge.log("developerhelper.xposed.Dump--> $txt")
     }
@@ -34,8 +38,8 @@ object Dump {
                 parent.mkdirs()
             }
             log("sdk version:" + Build.VERSION.SDK_INT)
-            if (DeviceUtils.supportNativeHook()) {
-                OreoDump.init(lpparam, type)
+            if (isNativeHook()) {
+                NativeDump.init(lpparam, type)
             } else {
                 LowSdkDump.init(lpparam, type)
             }
@@ -44,7 +48,6 @@ object Dump {
     }
 
     private fun copySoToCacheDir(packageName: String) {
-        copySoFile(packageName, Native.SO_FILE)
         copySoFile(packageName, Native.SO_FILE_V7a)
         copySoFile(packageName, Native.SO_FILE_V8a)
     }

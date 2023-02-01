@@ -10,7 +10,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  * @author WrBug
  * @since 2018/3/23
  */
-object OreoDump {
+object NativeDump {
     var packageName = ""
     fun log(txt: String) {
         if (!BuildConfig.DEBUG) {
