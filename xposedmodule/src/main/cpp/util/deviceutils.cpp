@@ -6,7 +6,7 @@
 #include "deviceutils.h"
 #include "fileutils.h"
 
-#define TAG "developerhelper.xposed.deviceutils.native-->"
+#define TAG "LSPosed.NativeDump.device_utils >"
 
 const static long DEX_MIN_LEN = 102400L;
 static int sdk_int = 0;
