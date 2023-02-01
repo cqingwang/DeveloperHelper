@@ -1,29 +1,32 @@
 package com.wrbug.developerhelper.xposed.dumpdex
 
-import com.wrbug.developerhelper.xposed.BuildConfig
-import de.robv.android.xposed.XposedBridge
-import de.robv.android.xposed.callbacks.XC_LoadPackage
+import com.wrbug.developerhelper.xposed.XposedInit
 
 /**
- * OreoDump
+ * Native
  *
  * @author WrBug
  * @since 2018/3/23
  */
 object NativeDump {
-    var packageName = ""
-    fun log(txt: String) {
-        if (!BuildConfig.DEBUG) {
-            return
+    var tag = "Native";
+    const val SO_FILE_V7a = "nativeDumpV7a.so"
+    const val SO_FILE_V8a = "nativeDumpV8a.so"
+
+    init {
+        if (loadLib(SO_FILE_V7a) || loadLib(SO_FILE_V8a)) {
+            XposedInit.log(tag, "动态库加载成功")
         }
-        XposedBridge.log("developerhelper.xposed.native--> $txt")
     }
 
-    fun init(
-        lpparam: XC_LoadPackage.LoadPackageParam,
-        type: PackerInfo.Type
-    ) {
-        packageName = lpparam.packageName
-        Native.dump(lpparam.packageName)
+    private fun loadLib(file: String) = try {
+        System.load("/data/data/${Dump.targetpackage}/cache/$file")
+        XposedInit.log(tag, "loaded $file")
+        true
+    } catch (t: Throwable) {
+        XposedInit.log(tag, "load $file failed")
+        false
     }
+
+    external fun dump(packageName: String)
 }

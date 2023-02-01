@@ -5,11 +5,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
 import com.jaredrummler.android.shell.Shell
-import com.wrbug.developerhelper.xposed.dumpdex.Native
+import com.wrbug.developerhelper.xposed.XposedInit
+import com.wrbug.developerhelper.xposed.dumpdex.NativeDump
 import com.wrbug.developerhelper.xposed.processshare.GlobalConfigProcessData
 import com.wrbug.developerhelper.xposed.processshare.ProcessDataManager
 import com.wrbug.developerhelper.xposed.saveToFile
-import com.wrbug.developerhelper.xposed.xposedLog
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -17,6 +17,7 @@ import org.jetbrains.anko.doAsync
 import java.io.File
 
 object DeveloperHelper {
+    var tag = "DeveloperHelper"
     fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         XposedHelpers.findAndHookMethod(
             "com.wrbug.developerhelper.ui.activity.main.MainActivity",
@@ -30,7 +31,7 @@ object DeveloperHelper {
                 }
 
                 override fun afterHookedMethod(param: MethodHookParam?) {
-                    "Main onCreate".xposedLog()
+                    XposedInit.log(tag, "Main onCreate")
                     val activity = param?.thisObject as Activity
                     val xposedSettingView = XposedHelpers.getObjectField(activity, "xposedSettingView") as View?
                     xposedSettingView?.apply {
@@ -59,14 +60,14 @@ object DeveloperHelper {
                 XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam?) {
                     val result = param?.result as Boolean
-                    "isRoot->$result".xposedLog()
+                    XposedInit.log(tag, "isRoot->$result")
                     if (result) {
-                        "设备已root,开始释放so文件".xposedLog()
+                        XposedInit.log(tag, "设备已root,开始释放so文件")
                         doAsync {
                             initProcessDataDir()
 //                            saveSo(activity, "armeabi", Native.SO_FILE)
-                            saveSo(activity, "armeabi-v7a", Native.SO_FILE_V7a)
-                            saveSo(activity, "arm64-v8a", Native.SO_FILE_V8a)
+                            saveSo(activity, "armeabi-v7a", NativeDump.SO_FILE_V7a)
+                            saveSo(activity, "arm64-v8a", NativeDump.SO_FILE_V8a)
                         }
 
                     }
@@ -75,35 +76,35 @@ object DeveloperHelper {
     }
 
     private fun initProcessDataDir() {
-        "创建processdata目录".xposedLog()
+        XposedInit.log(tag, "创建processdata目录")
         val dir = "/data/local/tmp/developerHelper"
         val commandResult = Shell.SU.run("mkdir -p $dir && chmod -R 777 $dir")
         if (commandResult.isSuccessful) {
-            "processdata目录创建成功".xposedLog()
+            XposedInit.log(tag, "processdata目录创建成功")
         } else {
-            "processdata目录创建失败：${commandResult.getStderr()}".xposedLog()
+            XposedInit.log(tag, "processdata目录创建失败：${commandResult.getStderr()}")
         }
     }
 
 
     private fun saveSo(activity: Activity, libPath: String, fileName: String) {
-        "正在释放$fileName".xposedLog()
+        XposedInit.log(tag, "正在释放$fileName")
         val tmpDir = File("/data/local/tmp")
         val soFile = File(tmpDir, fileName)
         val inputStream = activity.classLoader.getResource("lib/$libPath/libnativeDump.so").openStream()
         if (inputStream == null) {
-            "$libPath/libnativeDump.so 不存在".xposedLog()
+            XposedInit.log(tag, "$libPath/libnativeDump.so 不存在")
             return
         }
-        "已获取asset".xposedLog()
+        XposedInit.log(tag, "已获取asset")
         val tmpFile = File(activity.cacheDir, fileName)
         inputStream.saveToFile(tmpFile)
         val commandResult =
             Shell.SU.run("cp ${tmpFile.absolutePath} ${soFile.absolutePath}", "chmod 777 ${soFile.absolutePath}")
         if (commandResult.isSuccessful) {
-            "$fileName 释放成功".xposedLog()
+            XposedInit.log(tag, "$fileName 释放成功")
         } else {
-            "$fileName 释放失败：${commandResult.getStderr()}".xposedLog()
+            XposedInit.log(tag, "$fileName 释放失败：${commandResult.getStderr()}")
         }
         tmpFile.delete()
     }

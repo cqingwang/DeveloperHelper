@@ -1,20 +1,18 @@
 package com.wrbug.developerhelper.xposed.util
 
+import com.wrbug.developerhelper.xposed.XposedInit
 import de.robv.android.xposed.XposedBridge
 import java.io.*
 
-/**
- * Created by wrbug on 2017/8/23.
- */
 object FileUtils {
-
+    var tag = "FileUtils"
     fun writeByteToFile(data: ByteArray, path: String) {
         try {
             val localFileOutputStream = FileOutputStream(path)
             localFileOutputStream.write(data)
             localFileOutputStream.close()
         } catch (e: Exception) {
-            XposedBridge.log(e)
+            e.message?.let { XposedInit.log(tag, it) }
         }
     }
 

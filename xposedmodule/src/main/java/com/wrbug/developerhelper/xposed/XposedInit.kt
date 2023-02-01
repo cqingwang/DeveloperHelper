@@ -15,11 +15,13 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  * @since 2018/3/20
  */
 class XposedInit : IXposedHookLoadPackage {
+    var tag = "XposedInit"
     var configData: GlobalConfigProcessData? = null
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
+        log(tag, "handleLoadPackage${lpparam.packageName}")
         if (lpparam.packageName == SELF_PACKAGE_NAME) {
-            "hook 易开发".xposedLog()
+            log(tag, "call DeveloperHelper.init")
             DeveloperHelper.init(lpparam)
             return
         }
@@ -30,7 +32,7 @@ class XposedInit : IXposedHookLoadPackage {
             return
         }
         if (configData?.isXposedOpen() == false) {
-            "xposed已关闭".xposedLog()
+            log(tag, "xposed已关闭")
             return
         }
         Dump.init(lpparam)
@@ -38,8 +40,9 @@ class XposedInit : IXposedHookLoadPackage {
 
     companion object {
         const val SELF_PACKAGE_NAME = "com.wrbug.developerhelper"
-        fun log(t: Throwable) {
-            XposedBridge.log(t)
+
+        fun log(tag: String, msg: String) {
+            XposedBridge.log("developerhelper:$tag:$msg")
         }
     }
 }

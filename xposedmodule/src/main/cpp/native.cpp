@@ -7,8 +7,8 @@
 #define TAG "developerhelper.xposed.native.native-->"
 
 
-JNIEXPORT void JNICALL Java_com_wrbug_developerhelper_xposed_dumpdex_Native_dump
-        (JNIEnv *env, jclass obj, jstring packageName) {
+extern "C" JNIEXPORT void JNICALL Java_com_wrbug_developerhelper_xposed_dumpdex_NativeDump_dump
+        (JNIEnv *env, jobject obj, jstring packageName) {
 
     static bool is_hook = false;
     char *p = (char *) env->GetStringUTFChars(packageName, 0);

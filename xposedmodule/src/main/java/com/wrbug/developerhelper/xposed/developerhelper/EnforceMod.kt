@@ -1,30 +1,28 @@
 package com.wrbug.developerhelper.xposed.developerhelper
 
-import android.app.Activity
 import android.app.AlertDialog
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.view.View
 import android.widget.Toast
 import com.jaredrummler.android.shell.Shell
-import com.wrbug.developerhelper.basecommon.showToast
+import com.wrbug.developerhelper.xposed.XposedInit
 import com.wrbug.developerhelper.xposed.processshare.DumpDexListProcessData
 import com.wrbug.developerhelper.xposed.processshare.ProcessDataManager
-import com.wrbug.developerhelper.xposed.xposedLog
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 object EnforceMod {
+    var tag = "EnforceMod"
     fun start(lpparam: XC_LoadPackage.LoadPackageParam) {
         XposedBridge.hookAllMethods(
             lpparam.classLoader.loadClass("com.wrbug.developerhelper.ui.activity.hierachy.AppInfoPagerAdapter"),
             "setEnforceType",
             object : XC_MethodHook() {
                 override fun afterHookedMethod(param: MethodHookParam?) {
-                    "hook setEnforceType".xposedLog()
+                    XposedInit.log(tag, "hook setEnforceType")
                     val thisObject = param?.thisObject ?: return
                     val enforceItem = XposedHelpers.getObjectField(thisObject, "enforceItem")
                     val itemInfos = XposedHelpers.getObjectField(thisObject, "itemInfos") as ArrayList<Any>
@@ -40,7 +38,7 @@ object EnforceMod {
                     val apkInfo = XposedHelpers.getObjectField(thisObject, "apkInfo")
                     val applicationInfo = XposedHelpers.getObjectField(apkInfo, "applicationInfo")
                     val packageName = XposedHelpers.getObjectField(applicationInfo, "packageName") as String
-                    "加固类型：$name 添加脱壳按钮".xposedLog()
+                    XposedInit.log(tag,"加固类型：$name 添加脱壳按钮")
                     val data = ProcessDataManager.get(DumpDexListProcessData::class.java)
                     val list = data.getData()
                     val open = list?.contains(packageName) ?: false
@@ -92,7 +90,7 @@ object EnforceMod {
                         list.add(packageName)
                         data.setData(list)
                     }
-                    "已添加 $packageName".xposedLog()
+                    XposedInit.log(tag,"已添加 $packageName")
                     if (Shell.SU.run("am force-stop $packageName").isSuccessful.not()) {
                         Toast.makeText(this, "重启失败", Toast.LENGTH_SHORT).show()
                         list.remove(packageName)
