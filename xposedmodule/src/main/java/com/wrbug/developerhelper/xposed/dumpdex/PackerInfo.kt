@@ -30,6 +30,7 @@ object PackerInfo {
     private val BANG_BANG = arrayOf("com.secneo.apkwrapper.ApplicationWrapper") //梆梆加固
     private val TENCENT = arrayOf("com.tencent.StubShell.TxAppEntry") //腾讯加固
     private val BAI_DU = arrayOf("com.baidu.protect.StubApplication") //百度加固
+    private val DingXiang = arrayOf("com.security.shell.AppStub1") //顶象加固
 
 
     init {
@@ -38,6 +39,8 @@ object PackerInfo {
         classesMap.addAll(Arrays.asList(*BANG_BANG))
         classesMap.addAll(Arrays.asList(*TENCENT))
         classesMap.addAll(Arrays.asList(*BAI_DU))
+        classesMap.addAll(Arrays.asList(*DingXiang))
+
 
         for (s in QI_HOO) {
             typesMap[s] = Type.QI_HOO
@@ -54,7 +57,9 @@ object PackerInfo {
         for (s in BAI_DU) {
             typesMap[s] = Type.BAI_DU
         }
-
+        for (s in DingXiang) {
+            typesMap[s] = Type.DingXiang
+        }
     }
 
 
@@ -83,7 +88,8 @@ object PackerInfo {
         AI_JIA_MI("爱加密"),
         BANG_BANG("梆梆加固"),
         TENCENT("腾讯加固"),
-        BAI_DU("百度加固");
+        BAI_DU("百度加固"),
+        DingXiang("顶象加固");
 
         var shellClassName: String = ""
 
