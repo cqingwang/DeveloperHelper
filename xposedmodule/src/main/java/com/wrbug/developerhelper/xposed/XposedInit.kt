@@ -1,5 +1,6 @@
 package com.wrbug.developerhelper.xposed
 
+import com.wrbug.developerhelper.xposed.cover.Cover
 import com.wrbug.developerhelper.xposed.developerhelper.DeveloperHelper
 import com.wrbug.developerhelper.xposed.dumpdex.Dump
 import com.wrbug.developerhelper.xposed.processshare.GlobalConfigProcessData

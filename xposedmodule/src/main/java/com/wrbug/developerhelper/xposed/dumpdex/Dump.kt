@@ -3,6 +3,7 @@ package com.wrbug.developerhelper.xposed.dumpdex
 import android.os.Build
 import android.os.Process
 import com.wrbug.developerhelper.xposed.XposedInit
+import com.wrbug.developerhelper.xposed.cover.Cover
 import com.wrbug.developerhelper.xposed.processshare.DumpDexListProcessData
 import com.wrbug.developerhelper.xposed.processshare.ProcessDataManager
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -17,17 +18,19 @@ object Dump {
     }
 
     fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
-        val type = PackerInfo.find(lpparam) ?: return
-        XposedInit.log(tag, "sheller-> ${type.name}, ${lpparam.packageName},")
-        val data = ProcessDataManager.get(DumpDexListProcessData::class.java)
-        val packageNames = data.getData() ?: return
         val packageName = lpparam.packageName
-        if (packageNames.contains(packageName).not()) {
-            XposedInit.log(tag, "未包含 $packageName ,忽略")
-            return
-        }
+        val type = PackerInfo.find(lpparam) ?: return
+        XposedInit.log(tag, "sheller-> ${type.name}, ${packageName},")
+
+//        val data = ProcessDataManager.get(DumpDexListProcessData::class.java)
+//        val packageNames = data.getData() ?: return
+//        if (packageNames.contains(packageName).not()) {
+//            XposedInit.log(tag, "未包含 $packageName ,忽略")
+//            return
+//        }
+
         copySoToCacheDir(packageName)
-        XposedInit.log(tag, "pid:${Process.myPid()},tid:${Process.myTid()},uid:${Process.myUid()},准备脱壳：$packageName")
+        XposedInit.log(tag, "N1:pid:${Process.myPid()},tid:${Process.myTid()},uid:${Process.myUid()},准备脱壳：$packageName")
         if (lpparam.packageName == packageName) {
             val path = "/data/data/$packageName/dump"
             val parent = File(path)
@@ -36,6 +39,8 @@ object Dump {
             }
             XposedInit.log("Dump", "sdk version:" + Build.VERSION.SDK_INT)
             targetpackage = lpparam.packageName
+
+//            Cover.cover(lpparam);
             if (isNativeHook()) {
                 NativeDump.dump(targetpackage)
             } else {
