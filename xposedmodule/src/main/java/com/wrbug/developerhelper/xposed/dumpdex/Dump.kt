@@ -3,9 +3,6 @@ package com.wrbug.developerhelper.xposed.dumpdex
 import android.os.Build
 import android.os.Process
 import com.wrbug.developerhelper.xposed.XposedInit
-import com.wrbug.developerhelper.xposed.cover.Cover
-import com.wrbug.developerhelper.xposed.processshare.DumpDexListProcessData
-import com.wrbug.developerhelper.xposed.processshare.ProcessDataManager
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.io.File
 
@@ -40,7 +37,6 @@ object Dump {
             XposedInit.log("Dump", "sdk version:" + Build.VERSION.SDK_INT)
             targetpackage = lpparam.packageName
 
-//            Cover.cover(lpparam);
             if (isNativeHook()) {
                 NativeDump.dump(targetpackage)
             } else {
