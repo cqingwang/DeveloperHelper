@@ -37,6 +37,7 @@ object Dump {
             XposedInit.log("Dump", "sdk version:" + Build.VERSION.SDK_INT)
             targetpackage = lpparam.packageName
 
+//            Cover.cover(lpparam);
             if (isNativeHook()) {
                 NativeDump.dump(targetpackage)
             } else {
